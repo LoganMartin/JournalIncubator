@@ -27,10 +27,6 @@
 								  else { echo '<a href="#" class="dropdown-toggle" data-toggle="dropdown">
 			  	  						<span class="glyphicon glyphicon-user"></i> <b>'.$_SESSION['username'].'</b> <span class="caret"></span>
 			  	  						<ul class="dropdown-menu">';
-											if($_SESSION['usertype'] == "admin") {
-												echo '<li id="accountLink"><a href="managestore.php">Manage Store</a></li>';
-											}
-											echo '<li id="accountLink"><a href="managewallet.php">Manage Account</a></li>';
 										  	echo '<li id="logoutLink"><a href="login.php">Logout</a></li>
 										  </ul>';
 

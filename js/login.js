@@ -31,8 +31,7 @@
 				data: {"action": "login", "username": username, "password": password},
 				success: function(data) {
 					if(data=="success") {
-						//window.location = "#"; //TODO: insert page to be redirected to after successful login.
-						alert("We're in... sort of.");
+						window.location = "home.php"; //TODO: insert page to be redirected to after successful login.
 					}
 					else {
 						$("#error-alert").html(data);

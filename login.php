@@ -14,7 +14,7 @@
 	<input id="loginUsername" type="text" class="form-control" placeholder="Username">
 	<input id="loginPassword" type="password" class="form-control" placeholder="Password">
 	<button id="signin-button" class="btn btn-large btn-primary" onclick="verifyLogin()">Sign in</button>
-	<a href="register.php" id="register-button" class="btn btn-large btn-default pull-right" role="button">Need An Account?</a>
+	<a href="#" id="register-button" class="btn btn-large btn-default pull-right" role="button">Need An Account?</a>
 </div>
 <script src='js/login.js'></script>
 

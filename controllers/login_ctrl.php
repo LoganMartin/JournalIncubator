@@ -34,6 +34,7 @@
 			echo "Error: Please enter valid login credentials";
 		}
 		else {
+			$_SESSION['username'] = $username;
 			echo "success";
 		}
 	}
