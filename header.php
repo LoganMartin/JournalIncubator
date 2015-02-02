@@ -3,7 +3,7 @@
 ?>
 <html>
 	<head>
-		<title>Music Store!</title>
+		<title>Journal Incubator</title>
 		<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
 		<link rel="stylesheet" type="text/css" href="css/main.css">
 				
@@ -14,12 +14,12 @@
 		<nav class="navbar navbar-default" role="navigation">
 			<div class="container-fluid">
 				<div class="navbar-header">
-					<a class="navbar-brand" href="library.php">Music!</a>
+					<a class="navbar-brand" href="#">Journal Incubator</a>
 				</div>
 				<div class="collapse navbar-collapse">
 					<ul class="nav navbar-nav">
-						<li><a href="library.php">My Library</a></li>
-						<li><a href="store.php">Store</a></li>
+						<li><a href="#">Temp</a></li>
+						<li><a href="#">Temp 2</a></li>
 					</ul>
 					<ul class="nav navbar-nav navbar-right">
 						<li id="account-dropdown" class="dropdown">

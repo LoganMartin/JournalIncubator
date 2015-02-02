@@ -1,0 +1,9 @@
+.form-signin {
+	width: 350px;
+	margin: 50px auto 20px;
+	border: 1px solid #95a5a6;
+}
+
+.form-control {
+	margin-bottom: 10px;
+}
