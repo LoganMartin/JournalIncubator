@@ -22,6 +22,7 @@
 	function login() {
 		$username = $_POST['username'];
 		$password = $_POST['password'];
+		global $connection;
 		
 		$validCredentials = checkLogin($username, $password);
 		
@@ -29,7 +30,18 @@
 			echo "Error: Please enter valid login credentials";
 		}
 		else {
+			
+			//Get user id
+			$select = "SELECT * FROM users WHERE username = '$username'";
+					
+			if(!$result = mysql_query($select, $connection)) {
+				die('Error:'.mysql_error());
+			}
+			
+			$result = mysql_fetch_array($result, MYSQL_ASSOC);
+			$_SESSION['ojs_userID'] = $result['user_id'];
 			$_SESSION['ojs_username'] = $username;
+			
 			echo "success";
 		}
 	}

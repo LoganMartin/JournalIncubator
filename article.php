@@ -11,7 +11,6 @@
 	if(!isset($_GET['id'])) {header("Location: home.php");}
 ?>
 <link rel="stylesheet" type="text/css" href="css/article.css">
-<link rel="stylesheet" type="text/css" href="css/tablesorter/style.css">
 <div>
 	<h1>Article #<?php echo $_GET['id']; ?></h1>
 	
