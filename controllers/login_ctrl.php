@@ -1,9 +1,4 @@
 <?php
-/*
- * README
- * Paste this file in the main ojs install file, and uncomment. This file does nothing here.
- * 
- */
 	session_start();
 	require("database_ctrl.php");
 	require("../../interfacer.php");
@@ -34,7 +29,7 @@
 			echo "Error: Please enter valid login credentials";
 		}
 		else {
-			$_SESSION['username'] = $username;
+			$_SESSION['ojs_username'] = $username;
 			echo "success";
 		}
 	}

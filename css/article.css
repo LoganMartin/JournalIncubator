@@ -1,0 +1,51 @@
+.container {
+	background-color: rgba(44, 62, 80, .1);
+}
+
+#submission-container {
+	margin-bottom: 25px;
+	border-bottom: 1px solid #95a5a6;
+}
+
+.sub-field p {
+	display: inline-block;
+	min-width: 75px;
+}
+
+#timeline-container {
+	border: 1px solid #95a5a6;
+	background-color: #ffffff;
+}
+
+#timeline-header {
+	margin-top: 0px;
+	border-bottom: 1px solid #95a5a6;
+	padding-bottom: 10px;
+}
+
+#timeline-table th {
+	cursor: pointer; cursor: hand;
+}
+
+#table-container {
+	max-height: 500px;
+	overflow: scroll;
+	overflow-x: hidden;
+}
+
+table.tablesorter thead tr .header {
+	background-image: url("../img/bg.gif");
+	background-repeat: no-repeat;
+	background-position: center right;
+
+}
+
+table.tablesorter tbody tr.odd td {
+	background-color:#F0F0F6;
+}
+table.tablesorter thead tr .headerSortUp {
+	background-image: url("../img/asc.gif");
+}
+table.tablesorter thead tr .headerSortDown {
+	background-image: url("../img/desc.gif");
+}

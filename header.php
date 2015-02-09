@@ -23,9 +23,9 @@
 					</ul>
 					<ul class="nav navbar-nav navbar-right">
 						<li id="account-dropdown" class="dropdown">
-							<?php if(!isset($_SESSION['username'])) {echo '<a href="login.php">Log In</a>';} 
+							<?php if(!isset($_SESSION['ojs_username'])) {echo '<a href="login.php">Log In</a>';} 
 								  else { echo '<a href="#" class="dropdown-toggle" data-toggle="dropdown">
-			  	  						<span class="glyphicon glyphicon-user"></i> <b>'.$_SESSION['username'].'</b> <span class="caret"></span>
+			  	  						<span class="glyphicon glyphicon-user"></i> <b>'.$_SESSION['ojs_username'].'</b> <span class="caret"></span>
 			  	  						<ul class="dropdown-menu">';
 										  	echo '<li id="logoutLink"><a href="login.php">Logout</a></li>
 										  </ul>';

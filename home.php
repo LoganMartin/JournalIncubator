@@ -2,7 +2,7 @@
 	include('header.php');
 	
 	//Makes sure a user is logged in, else it redirects to the login page.
-	if(!isset($_SESSION['username'])) {header("Location: login.php");}
+	if(!isset($_SESSION['ojs_username'])) {header("Location: login.php");}
 ?>
 <link rel="stylesheet" type="text/css" href="css/home.css">
 <div>
