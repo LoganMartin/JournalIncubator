@@ -60,7 +60,8 @@
 		$select = "SELECT * FROM edit_assignments e 
 						INNER JOIN articles a ON e.article_id=a.article_id
 						INNER JOIN edit_decisions d ON a.article_id=d.article_id
-						WHERE e.editor_id=".$_SESSION['ojs_userID']."";
+						WHERE e.editor_id=".$_SESSION['ojs_userID']."
+						AND d.decision <> 1";
 		if(!$result = mysql_query($select, $connection)) {
 			die('Error:'.mysql_error());
 		}
