@@ -5,6 +5,7 @@
 		$action = $_POST['action'];
 		switch($action) {
 			case 'getArticleInfo': 	getArticleInfo(); break;
+			case 'submitEvent': 	submitEvent(); break;
 			default: 			break;
 		}
 	}
@@ -148,6 +149,29 @@
 		$table .= "</tbody></table>";
 		
 		return $table;
+	}
+	
+	function submitEvent() {
+		$event = $_POST['eventText'];
+		$articleID = $_POST['articleID'];
+		$userID = $_POST['userID'];
+		$clientIP =  $_SERVER['REMOTE_ADDR'];
+		$datetime = date("Y-m-d h:i:s");
+		global $connection;
+		
+		
+		$insert = "INSERT INTO event_log (assoc_type, assoc_id, user_id, date_logged, ip_address, message, is_translated)
+					VALUES (257, $articleID, $userID, '$datetime', '$clientIP', '$event', 1)";
+		
+		if(!mysql_query($insert, $connection)) {
+			die('Error:'.mysql_error());
+		}
+
+		$alert = "<div class='alert alert-success alert-dismissible' role='alert'>
+					<button type='button' class='close' data-dismissed='alert' aria-label='Close'>
+						<span aria-hidden='true'>&times;</span></button>
+					<strong>Success!</strong> Your event message has been recorded.</div>";
+		echo $alert;
 	}
 
 ?>

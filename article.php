@@ -36,16 +36,27 @@
 		<?php echo getReviewerInfo($_GET['id']); ?>
 	</div>
 	
-	
-	<div id="timeline-container" class="well">
-		<h3 id="timeline-header">Review Timeline</h3>
-		<div id="table-container">
-			<?php echo getArticleTimeline($_GET['id']); ?>
+	<div id="events-container sub-field">
+		<div id="timeline-container" class="well">
+			<h3 id="timeline-header">Review Timeline</h3>
+			<div id="table-container">
+				<?php echo getArticleTimeline($_GET['id']); ?>
+			</div>
+		</div>
+		<div id="event-form">
+			<div id="event-alert-div" class="hidden"></div>
+			<p>Add New Event:</p>
+			<textarea id="articleEvent"></textarea>
+			<button id="event-submit-button" class="btn btn-primary pull-right" onclick="submitEvent()">Submit</button>
 		</div>
 	</div>
 </div>
 
 <script src='js/jquery.tablesorter.min.js'></script>
+<script> 
+	var articleID = <?php echo $_GET['id']; ?>;
+	var userID = <?php echo $_SESSION['ojs_userID']; ?>;
+</script>
 <script src='js/article.js'></script>
 <?php 
 	echo file_get_contents('footer.php');
