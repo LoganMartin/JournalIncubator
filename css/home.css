@@ -2,15 +2,25 @@
 	background-color: rgba(44, 62, 80, .1);
 }
 
-.tab-pane {
-	background-color: #FFFFFF;
+.page-header {
+	border-bottom: 1px solid #95a5a6;
+}
+
+.tab-content {
+	margin-top: 15px;
+}
+
+.status-tab-content {
+	background: #FFFFFF;
+	padding-top: 15px;
+	margin-top: 0px;
 }
 
 #review-table th, tr {
-	cursor: pointer; cursor: hand;
+	cursor: pointer;
 }
 
-.tab-pane {
+.nested-tab-pane {
 	max-height: 500px;
 	overflow: scroll;
 	overflow-x: hidden;

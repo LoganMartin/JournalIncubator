@@ -64,6 +64,61 @@
 		return $data;
 	}
 	
+	function getReviewerInfo($articleID){
+		global $connection;
+		$reviewer = "";
+		$reviewer_number = 0;
+		$reviewer_letter = array("A", "B", "C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q");
+		//Get article's reviewer information
+		$select = "SELECT * FROM review_assignments a INNER JOIN users  b ON a.reviewer_id=b.user_id WHERE submission_id = $articleID";
+					
+		if(!$authResult = mysql_query($select, $connection)) {
+			die('Error:'.mysql_error());
+		}
+		
+		while($row = mysql_fetch_array($authResult, MYSQL_ASSOC)) {
+		if($row['cancelled']=="0"){
+				$reviewer .= "<h3>Reviewer ".$reviewer_letter[$reviewer_number] ."</h3>
+							<div class='sub-field'>
+							<p>Reviewer:</p>";
+		
+				$reviewer .= $row['first_name']." ";
+				$reviewer .= $row['last_name']."</br>";
+			
+			if($row['date_notified']!=NULL){$reviewer .= "Request: ".$row['date_notified']."</br>";}
+			//Original page has button to send email here
+			if($row['date_confirmed']!=NULL){$reviewer .= "Underway: ".$row['date_confirmed']."</br>";}
+			if($row['date_due']!=NULL){$reviewer .= "Due: ".$row['date_due']."</br>";}
+			if($row['date_acknowledged']!=NULL){$reviewer .= "Acknowledge: ".$row['date_acknowledged']."</br>";}
+			
+			if($row['recommendation']!=NULL){$reviewer .= "Recommendation: ".$row['recommendation']."</br>";}
+			//Need to find corrosponding data for these instead of just values
+			
+			
+			$comments= getComments($articleID, $row['user_id']);
+			if($comments!=NULL){$reviewer .= "Review: ". $comments."</br>";}
+				$reviewer .= "</div>";
+				//need buttons asking whether or not reviewer will accept, 
+				//if accepted, 'underway' changes to current date/time
+				
+				//Need 'Recommendation'
+				//Need 'review'
+				//Need 'uploaded files'
+				//Need 'reviewer rating'
+				$reviewer_number += 1;
+			}
+		}
+		return $reviewer;
+	}
+	
+	//function to grab the comments for a specific review from a specific user
+	function getComments($articleID, $userID){
+		global $connection;
+		
+		//run query
+		return 5; //temp	
+	}
+	
 	function getArticleTimeline($articleID) {
 		global $connection;
 		

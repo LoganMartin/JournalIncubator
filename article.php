@@ -31,6 +31,12 @@
 		</div>
 	</div>
 	
+	
+	<div id="reviewer-container">
+		<?php echo getReviewerInfo($_GET['id']); ?>
+	</div>
+	
+	
 	<div id="timeline-container" class="well">
 		<h3 id="timeline-header">Review Timeline</h3>
 		<div id="table-container">

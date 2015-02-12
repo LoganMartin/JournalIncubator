@@ -7,14 +7,22 @@
 	border-bottom: 1px solid #95a5a6;
 }
 
+#reviewer-container {
+	padding-bottom: 15px;
+	border-bottom: 1px solid #95A5A6;
+	margin-bottom: 25px;
+}
+
 .sub-field p {
 	display: inline-block;
 	min-width: 75px;
 }
 
+
 #timeline-container {
 	border: 1px solid #95a5a6;
 	background-color: #ffffff;
+	margin-bottom: 0px;
 }
 
 #timeline-header {

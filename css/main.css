@@ -1,8 +1,15 @@
 .container {
 	width: 1160px;
 	padding-bottom: 20px;
+	margin-top: 100px;
+	margin-bottom: 20px;
 }
 
 body {
 	background-image: url("../img/textured_paper/paper.png");
+}
+
+.badge { 
+	/*Increasing length of badge on rhs of content to make more even with left, because it's bugging the hell outta me*/
+	padding-right: 8px;
 }
