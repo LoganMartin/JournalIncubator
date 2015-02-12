@@ -1,0 +1,44 @@
+.container {
+	background-color: rgba(44, 62, 80, .1);
+}
+
+.page-header {
+	border-bottom: 1px solid #95a5a6;
+}
+
+.tab-content {
+	margin-top: 15px;
+}
+
+.status-tab-content {
+	background: #FFFFFF;
+	padding-top: 15px;
+	margin-top: 0px;
+}
+
+#review-table th, tr {
+	cursor: pointer;
+}
+
+.nested-tab-pane {
+	max-height: 500px;
+	overflow: scroll;
+	overflow-x: hidden;
+}
+
+table.tablesorter thead tr .header {
+	background-image: url("../img/bg.gif");
+	background-repeat: no-repeat;
+	background-position: center right;
+
+}
+
+table.tablesorter tbody tr.odd td {
+	background-color:#F0F0F6;
+}
+table.tablesorter thead tr .headerSortUp {
+	background-image: url("../img/asc.gif");
+}
+table.tablesorter thead tr .headerSortDown {
+	background-image: url("../img/desc.gif");
+}
