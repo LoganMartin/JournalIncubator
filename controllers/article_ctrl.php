@@ -6,6 +6,7 @@
 		switch($action) {
 			case 'getArticleInfo': 	getArticleInfo(); break;
 			case 'submitEvent': 	submitEvent(); break;
+			case 'ajaxGetTimeline':  ajaxGetTimeline(); break;
 			default: 			break;
 		}
 	}
@@ -151,8 +152,15 @@
 		return $table;
 	}
 	
+	//Called using ajax in artile.js. Needed to pass a POST variable as a function paramater to getArticleTimeline().
+	//There's probably a better way of doing this, but this is good enough for now.
+	function ajaxGetTimeline() {
+		echo getArticleTimeline($_POST['articleID']);
+	}
+	
 	function submitEvent() {
-		$event = $_POST['eventText'];
+		$event = "Editors Note: ".$_POST['eventText']; //Add Editors note: to the start of a user submitted event, as requested by PO.
+		$event = mysql_real_escape_string($event); //Escape special characters for INSERTING.
 		$articleID = $_POST['articleID'];
 		$userID = $_POST['userID'];
 		$clientIP =  $_SERVER['REMOTE_ADDR'];
