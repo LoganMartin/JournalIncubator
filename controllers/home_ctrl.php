@@ -245,8 +245,9 @@
 						<thead>
 							<tr>
 								<th width='10%'>ID</th>
-								<th width='30%'>Author</th>
-								<th width='60%'>Title</th>
+								<th width='15%'>Author</th>
+								<th width='35%'>Title</th>
+								<th width='40%'>Latest Updates</th>
 							</tr>
 						</thead>
 						<tbody>";
@@ -255,7 +256,8 @@
 			$table .= "<tr onclick='openArticle(".$row['ID'].")'>";
 			$table .='<td>'.$row['ID'].'</td>';
 			$table .= '<td>'.$row['Author'].'</td>';
-			$table .= '<td>'.$row['Title'].'</td></tr>';
+			$table .= '<td>'.$row['Title'].'</td>';
+			$table .= '<td>'.getLatestUpdates($row['ID']).'</td></tr>';
 		}
 						
 		$table .= "</tbody></table>";
@@ -304,8 +306,9 @@
 						<thead>
 							<tr>
 								<th width='10%'>ID</th>
-								<th width='30%'>Author</th>
-								<th width='60%'>Title</th>
+								<th width='15%'>Author</th>
+								<th width='35%'>Title</th>
+								<th width='40%'>Latest Updates</th>
 							</tr>
 						</thead>
 						<tbody>";
@@ -314,7 +317,9 @@
 			$table .= "<tr onclick='openArticle(".$row['ID'].")'>";
 			$table .='<td>'.$row['ID'].'</td>';
 			$table .= '<td>'.$row['Author'].'</td>';
-			$table .= '<td>'.$row['Title'].'</td></tr>';
+			$table .= '<td>'.$row['Title'].'</td>';
+			$table .= '<td>'.getLatestUpdates($row['ID']).'</td></tr>';
+			
 		}
 						
 		$table .= "</tbody></table>";
@@ -359,8 +364,9 @@
 						<thead>
 							<tr>
 								<th width='10%'>ID</th>
-								<th width='30%'>Author</th>
-								<th width='60%'>Title</th>
+								<th width='15%'>Author</th>
+								<th width='35%'>Title</th>
+								<th width='40%'>Latest Updates</th>
 							</tr>
 						</thead>
 						<tbody>";
@@ -369,11 +375,36 @@
 			$table .= "<tr onclick='openArticle(".$row['ID'].")'>";
 			$table .='<td>'.$row['ID'].'</td>';
 			$table .= '<td>'.$row['Author'].'</td>';
-			$table .= '<td>'.$row['Title'].'</td></tr>';
+			$table .= '<td>'.$row['Title'].'</td>';
+			$table .= '<td>'.getLatestUpdates($row['ID']).'</td></tr>';
 		}
 						
 		$table .= "</tbody></table>";
 		return $table;
+	}
+	
+	/**
+	 * Gets the two most recent events of an article, to be displayed in the articles table on each article.
+	 * @param $articleID The ID # of the article we are getting the events from.
+	 * @return A string containing the two comments, with an html <br> between them.
+	 */
+	function getLatestUpdates($articleID) {
+		global $connection;
+		$select = "SELECT * FROM event_log INNER JOIN users ON event_log.user_id=users.user_id 
+					WHERE assoc_id = $articleID ORDER BY event_log.date_logged DESC LIMIT 2";
+					
+		if(!$result = mysql_query($select, $connection)) {
+			die('Error:'.mysql_error());
+		}
+		
+		$updates = "";
+		while($row = mysql_fetch_array($result, MYSQL_ASSOC)) {
+			$updates .= '<b>'.date("D, M d, Y",strtotime($row['date_logged']))." - ";
+			$updates .= $row['first_name'].' '.$row['last_name'].":</b><br> ";
+			$updates .= $row['message'].'<br>';
+		}
+		
+		return $updates;
 	}
 	
 ?>
