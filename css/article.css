@@ -29,6 +29,10 @@ p {
 	margin-bottom: 0px;
 	width: 70%;
 	display: inline-block;
+<<<<<<< HEAD
+=======
+	min-height: 500px;
+>>>>>>> LogansBranch
 }
 
 #event-form {
@@ -43,6 +47,14 @@ p {
 	height: 200px;
 }
 
+<<<<<<< HEAD
+=======
+.glyphicon-calendar {
+	cursor: pointer;
+	margin-left: 5px;
+}
+
+>>>>>>> LogansBranch
 #event-submit-button {
 	margin-top: 10px;
 }

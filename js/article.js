@@ -17,6 +17,10 @@ function submitEvent() {
 			data: {"action": "submitEvent", "eventText": eventText, "articleID": articleID, "userID": userID},
 			success: function(data) {
 				$("#event-alert-div").html(data);
+<<<<<<< HEAD
+=======
+				refreshTimeline();
+>>>>>>> LogansBranch
 				$("#event-alert-div").removeClass("hidden");
 			},
 			error: function(xhr) {
@@ -27,5 +31,21 @@ function submitEvent() {
 }
 
 function refreshTimeline() {
+<<<<<<< HEAD
 	
 }
+=======
+	$.ajax({
+		type: "POST",
+		url: "controllers/article_ctrl.php",
+		data: {"action": "ajaxGetTimeline", "articleID": articleID},
+		success: function(data) {
+			$("#table-container").html(data);
+			$("#timeline-table").tablesorter( {sortList: [[0,1]]} );
+		},
+		error: function(xhr) {
+			alert("An error occured: " + xhr.status + " " + xhr.statusText);
+		}
+	});
+}
+>>>>>>> LogansBranch

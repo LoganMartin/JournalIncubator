@@ -6,6 +6,10 @@
 		switch($action) {
 			case 'getArticleInfo': 	getArticleInfo(); break;
 			case 'submitEvent': 	submitEvent(); break;
+<<<<<<< HEAD
+=======
+			case 'ajaxGetTimeline':  ajaxGetTimeline(); break;
+>>>>>>> LogansBranch
 			default: 			break;
 		}
 	}
@@ -13,6 +17,10 @@
 	function getArticleInfo($articleID) {
 		global $connection;
 		$author = "";
+<<<<<<< HEAD
+=======
+		$title = "";
+>>>>>>> LogansBranch
 		
 		//Get article's author information
 		$select = "SELECT * FROM authors WHERE submission_id = $articleID ORDER BY seq";
@@ -44,8 +52,12 @@
 		
 		//Get other article information
 		$select = "SELECT * FROM articles a
+<<<<<<< HEAD
 					INNER JOIN article_settings s ON a.article_id=s.article_id
 					INNER JOIN edit_assignments e ON a.article_id=e.article_id				 
+=======
+					INNER JOIN article_settings s ON a.article_id=s.article_id			 
+>>>>>>> LogansBranch
 					WHERE a.article_id = $articleID";
 					
 		if(!$result = mysql_query($select, $connection)) {
@@ -53,7 +65,11 @@
 		}
 		
 		while($row = mysql_fetch_array($result, MYSQL_ASSOC)) {
+<<<<<<< HEAD
 			if($row['setting_name'] == "cleanTitle") {
+=======
+			if($row['setting_name'] == "title") {
+>>>>>>> LogansBranch
 				$title = $row['setting_value'];
 			}
 			
@@ -83,6 +99,7 @@
 							<div class='sub-field'>
 							<p>Reviewer:</p>";
 		
+<<<<<<< HEAD
 				$reviewer .= $row['first_name']." ";
 				$reviewer .= $row['last_name']."</br>";
 			
@@ -93,11 +110,27 @@
 			if($row['date_acknowledged']!=NULL){$reviewer .= "Acknowledge: ".$row['date_acknowledged']."</br>";}
 			
 			if($row['recommendation']!=NULL){$reviewer .= "Recommendation: ".$row['recommendation']."</br>";}
+=======
+				$reviewer .= "<p>".$row['first_name'];
+				$reviewer .= $row['last_name']."</p></br>";
+			
+			if($row['date_notified']!=NULL){$reviewer .= "<p>Request: ".$row['date_notified']."</p></br>";}
+			//Original page has button to send email here
+			if($row['date_confirmed']!=NULL){$reviewer .= "<p>Underway: ".$row['date_confirmed']."</p></br>";}
+			if($row['date_due']!=NULL){$reviewer .= "<p>Due: ".date("D, M d, Y",strtotime($row['date_due']))."</p><span class='glyphicon glyphicon-calendar' aria-hidden='true'></span></br>";}
+			if($row['date_acknowledged']!=NULL){$reviewer .= "<p>Acknowledge: ".$row['date_acknowledged']."</p></br>";}
+			
+			if($row['recommendation']!=NULL){$reviewer .= "<p>Recommendation: ".$row['recommendation']."</p></br>";}
+>>>>>>> LogansBranch
 			//Need to find corrosponding data for these instead of just values
 			
 			
 			$comments= getComments($articleID, $row['user_id']);
+<<<<<<< HEAD
 			if($comments!=NULL){$reviewer .= "Review: ". $comments."</br>";}
+=======
+			if($comments!=NULL){$reviewer .= "<p>Review: ". $comments."</p></br>";}
+>>>>>>> LogansBranch
 				$reviewer .= "</div>";
 				//need buttons asking whether or not reviewer will accept, 
 				//if accepted, 'underway' changes to current date/time
@@ -151,8 +184,20 @@
 		return $table;
 	}
 	
+<<<<<<< HEAD
 	function submitEvent() {
 		$event = $_POST['eventText'];
+=======
+	//Called using ajax in artile.js. Needed to pass a POST variable as a function paramater to getArticleTimeline().
+	//There's probably a better way of doing this, but this is good enough for now.
+	function ajaxGetTimeline() {
+		echo getArticleTimeline($_POST['articleID']);
+	}
+	
+	function submitEvent() {
+		$event = "Editors Note: ".$_POST['eventText']; //Add Editors note: to the start of a user submitted event, as requested by PO.
+		$event = mysql_real_escape_string($event); //Escape special characters for INSERTING.
+>>>>>>> LogansBranch
 		$articleID = $_POST['articleID'];
 		$userID = $_POST['userID'];
 		$clientIP =  $_SERVER['REMOTE_ADDR'];

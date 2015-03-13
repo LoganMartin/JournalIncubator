@@ -18,7 +18,11 @@
 				</div>
 				<div class="collapse navbar-collapse">
 					<ul class="nav navbar-nav">
+<<<<<<< HEAD
 						<li><a href="#">Temp</a></li>
+=======
+						<li><a href="home.php"><span class="glyphicon glyphicon-home" aria-hidden="true"></span></a></li>
+>>>>>>> LogansBranch
 						<li><a href="#">Temp 2</a></li>
 					</ul>
 					<ul class="nav navbar-nav navbar-right">
