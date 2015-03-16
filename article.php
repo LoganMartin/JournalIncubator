@@ -13,7 +13,7 @@
 <link rel="stylesheet" type="text/css" href="css/article.css">
 <div>
 	<h1>Article #<?php echo $_GET['id']; ?></h1>
-	
+	<div id="ojs-link"><a href="../index.php/digital_studies/editor/submissionReview/<?php echo $_GET['id']; ?>" target="_blank">Open Article in OJS<span id="ojs-icon" class="glyphicon glyphicon-share-alt" aria-hidden="true"></span></a></div>
 	<?php $article = getArticleInfo($_GET['id']); ?>
 	<div id="submission-container">
 		<h3>Submission</h3>
