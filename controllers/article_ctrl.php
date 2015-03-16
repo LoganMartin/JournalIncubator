@@ -144,7 +144,7 @@
 		while($row = mysql_fetch_array($result, MYSQL_ASSOC)) {
 			$table .= '<tr><td>'.$row['date_logged'].'</td>';
 			$table .= '<td>'.$row['first_name'].' '.$row['last_name'].'</td>';
-			$table .= '<td>'.$row['message'].'</td></tr>';
+			$table .= '<td>'.htmlspecialchars($row['message']).'</td></tr>';
 		}
 						
 		$table .= "</tbody></table>";

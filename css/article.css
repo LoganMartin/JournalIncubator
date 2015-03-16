@@ -85,3 +85,20 @@ table.tablesorter thead tr .headerSortUp {
 table.tablesorter thead tr .headerSortDown {
 	background-image: url("../img/desc.gif");
 }
+
+#ojs-link {
+	float: right;
+	font-size: 20px;
+	font-weight: bold;
+	position: relative;
+	top: -45px;
+	margin-right: 30px;
+}
+
+#ojs-link a {
+	color: rgb(44,62,80);
+}
+
+#ojs-icon {
+	margin-left: 5px;
+}
