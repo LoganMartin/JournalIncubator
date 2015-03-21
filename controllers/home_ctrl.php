@@ -172,45 +172,45 @@
 				$tabHTML .= "<li role='presentation' class='active'><a href='#unassignedTab".$count."' aria-controls='unassignedTab$count' role='tab' data-toggle='tab'>Unassigned <span id='editor-unassigned-badge' class='badge'>".mysql_num_rows($unassignedData)."</span></a></li>";	
 				$tabHTML .= "<li role='presentation'><a href='#reviewTab".$count."' aria-controls='reviewTab$count' role='tab' data-toggle='tab'>In Review <span id='editor-review-badge' class='badge'>".mysql_num_rows($reviewData)."</span></a></li>";
 				$tabHTML .= "<li role='presentation'><a href='#editTab".$count."' aria-controls='editTab$count' role='tab' data-toggle='tab'>In Editing <span id='editor-editing-badge' class='badge'>".mysql_num_rows($editingData)."</span></a></li>";
-				$contentHTML .= "<div role='tabpanel' class='tab-pane nested-tab-pane active' id='unassignedTab$count'>".generateArticleTable($unassignedData)."</div>";
-				$contentHTML .= "<div role='tabpanel' class='tab-pane nested-tab-pane' id='reviewTab$count'>".generateArticleTable($reviewData)."</div>";
-				$contentHTML .= "<div role='tabpanel' class='tab-pane nested-tab-pane' id='editTab$count'>".generateArticleTable($editingData)."</div>";
+				$contentHTML .= "<div role='tabpanel' class='tab-pane nested-tab-pane active' id='unassignedTab$count'>".generateArticleTable($unassignedData, "editor")."</div>";
+				$contentHTML .= "<div role='tabpanel' class='tab-pane nested-tab-pane' id='reviewTab$count'>".generateArticleTable($reviewData, "editor")."</div>";
+				$contentHTML .= "<div role='tabpanel' class='tab-pane nested-tab-pane' id='editTab$count'>".generateArticleTable($editingData, "editor")."</div>";
 				break;
 			case 512: //Section Editor
 				$reviewData = getArticlesByType("section-review");
 				$editingData = getArticlesByType("section-editing");
 				$tabHTML .= "<li role='presentation' class='active'><a href='#reviewTab".$count."' aria-controls='reviewTab$count' role='tab' data-toggle='tab'>In Review <span id='section-review-badge' class='badge'>".mysql_num_rows($reviewData)."</span></a></li>";
 				$tabHTML .= "<li role='presentation'><a href='#editTab".$count."' aria-controls='editTab$count' role='tab' data-toggle='tab'>In Editing <span id='section-editing-badge' class='badge'>".mysql_num_rows($editingData)."</span></a></li>";
-				$contentHTML .= "<div role='tabpanel' class='tab-pane nested-tab-pane active' id='reviewTab$count'>".generateArticleTable($reviewData)."</div>";
-				$contentHTML .= "<div role='tabpanel' class='tab-pane nested-tab-pane' id='editTab$count'>".generateArticleTable($editingData)."</div>";
+				$contentHTML .= "<div role='tabpanel' class='tab-pane nested-tab-pane active' id='reviewTab$count'>".generateArticleTable($reviewData, "sectionEditor")."</div>";
+				$contentHTML .= "<div role='tabpanel' class='tab-pane nested-tab-pane' id='editTab$count'>".generateArticleTable($editingData, "sectionEditor")."</div>";
 				break;
 			case 768: //Layout Editor
 				$layoutData = getArticlesByType("layout-editing");
 				$tabHTML .= "<li role='presentation' class='active'><a href='#editTab".$count."' aria-controls='editTab$count' role='tab' data-toggle='tab'>In Editing <span id='layout-badge' class='badge'>".mysql_num_rows($layoutData)."</span></a></li>";
-				$contentHTML .= "<div role='tabpanel' class='tab-pane nested-tab-pane active' id='editTab$count'>".generateArticleTable($layoutData)."</div>";
+				$contentHTML .= "<div role='tabpanel' class='tab-pane nested-tab-pane active' id='editTab$count'>".generateArticleTable($layoutData, "layoutEditor")."</div>";
 				break;
 			case 4096: //Reviewer
 				$reviewerData = getArticlesByType("reviewer-active");
 				$tabHTML .= "<li role='presentation' class='active'><a href='#unassignedTab".$count."' aria-controls='unassignedTab$count' role='tab' data-toggle='tab'>Active <span id='reviewer-badge' class='badge'>".mysql_num_rows($reviewerData)."</span></a></li>";
-				$contentHTML .= "<div role='tabpanel' class='tab-pane nested-tab-pane active' id='unassignedTab$count'>".generateArticleTable($reviewerData)."</div>";
+				$contentHTML .= "<div role='tabpanel' class='tab-pane nested-tab-pane active' id='unassignedTab$count'>".generateArticleTable($reviewerData, "reviewer")."</div>";
 				break;
 			case 8192: //Copy Editor
 				$copyData = getArticlesByType("copy-editing");
 				$tabHTML .= "<li role='presentation' class='active'><a href='#editTab".$count."' aria-controls='editTab$count' role='tab' data-toggle='tab'>In Editing <span id='copy-badge' class='badge'>".mysql_num_rows($copyData)."</span></a></li>";
-				$contentHTML .= "<div role='tabpanel' class='tab-pane nested-tab-pane active' id='editTab$count'>".generateArticleTable($copyData)."</div>";
+				$contentHTML .= "<div role='tabpanel' class='tab-pane nested-tab-pane active' id='editTab$count'>".generateArticleTable($copyData, "copyEditor")."</div>";
 				break;
 			case 12288: //Proofreader
 				$proofData = getArticlesByType("proof-editing");
 				$tabHTML .= "<li role='presentation' class='active'><a href='#editTab".$count."' aria-controls='editTab$count' role='tab' data-toggle='tab'>In Editing <span id='proof-badge' class='badge'>".mysql_num_rows($proofData)."</span></a></li>";
-				$contentHTML .= "<div role='tabpanel' class='tab-pane nested-tab-pane active' id='editTab$count'>".generateArticleTable($proofData)."</div>";
+				$contentHTML .= "<div role='tabpanel' class='tab-pane nested-tab-pane active' id='editTab$count'>".generateArticleTable($proofData, "proofReader")."</div>";
 				break;
 			case 65536: //Author
 				$activeData = getArticlesByType("author-active");
 				$archiveData = getArticlesByType("author-archive");		
 				$tabHTML .= "<li role='presentation' class='active'><a href='#unassignedTab".$count."' aria-controls='unassignedTab$count' role='tab' data-toggle='tab'>Active <span id='author-active-badge' class='badge'>".mysql_num_rows($activeData)."</span></a></li>";
 				$tabHTML .= "<li role='presentation'><a href='#reviewTab".$count."' aria-controls='reviewTab$count' role='tab' data-toggle='tab'>Archive <span id='author-archive-badge' class='badge'>".mysql_num_rows($archiveData)."</span></a></li>";
-				$contentHTML .= "<div role='tabpanel' class='tab-pane nested-tab-pane active' id='unassignedTab$count'>".generateArticleTable($activeData)."</div>";
-				$contentHTML .= "<div role='tabpanel' class='tab-pane nested-tab-pane' id='reviewTab$count'>".generateArticleTable($archiveData)."/div>";
+				$contentHTML .= "<div role='tabpanel' class='tab-pane nested-tab-pane active' id='unassignedTab$count'>".generateArticleTable($activeData, "author")."</div>";
+				$contentHTML .= "<div role='tabpanel' class='tab-pane nested-tab-pane' id='reviewTab$count'>".generateArticleTable($archiveData, "author")."/div>";
 				break;
 			default:
 				break;
@@ -222,9 +222,10 @@
 	/**
 	 * Generates an html table, formatted to display some basic article information
 	 * @param $tableData data pulled from the database, to be inserted into our html table.
+	 * @param $role The role the user has in relation to the article. ex. Editor, Layout Editor, Author, etc.
 	 * @return string html code of our generated table.
 	 */
-	function generateArticleTable($tableData) {
+	function generateArticleTable($tableData, $role) {
 		$table = "<table class='table tablesorter table-striped table-hover article-table'>
 						<thead>
 							<tr>
@@ -239,7 +240,7 @@
 		//$tableData = getArticlesByType($articleType);
 		
 		while($row = mysql_fetch_array($tableData, MYSQL_ASSOC)) {
-			$table .= "<tr onclick='openArticle(".$row['ID'].")'>";
+			$table .= "<tr onclick='openArticle(".$row['ID'].", \"$role\")'>";
 			$table .='<td>'.$row['ID'].'</td>';
 			$table .= '<td>'.$row['Author'].'</td>';
 			$table .= '<td>'.$row['Title'].'</td>';

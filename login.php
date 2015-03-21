@@ -11,7 +11,7 @@
 	<div id="error-div" class="hidden">
 		<div id="error-alert" class="alert alert-danger"></div>
 	</div>
-	<input id="loginUsername" type="text" class="form-control" placeholder="Username">
+	<input id="loginUsername" type="text" class="form-control" placeholder="Username" autofocus>
 	<input id="loginPassword" type="password" class="form-control" placeholder="Password">
 	<button id="signin-button" class="btn btn-large btn-primary" onclick="verifyLogin()">Sign in</button>
 	<a href="../index.php/digital_studies/user/register" id="register-button" class="btn btn-large btn-default pull-right" role="button">Need An Account?</a>

@@ -9,8 +9,8 @@ $(document).ready(function() {
 });
 
 //Opens new tab for the article that has been clicked by the user.
-function openArticle(id) {
-	var url = "article.php?id=" + id;
+function openArticle(id, role) {
+	var url = "article.php?id=" + id + "&r=" + role;
 	var page = window.open(url, '_blank');
 	page.focus();
 }
