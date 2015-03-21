@@ -9,11 +9,12 @@
 	//Makes sure a user is logged in, else it redirects to the login page.
 	if(!isset($_SESSION['ojs_username'])) {header("Location: login.php");}
 	if(!isset($_GET['id'])) {header("Location: home.php");}
+	if(!isset($_GET['r'])) {header("Location: home.php");}
 ?>
 <link rel="stylesheet" type="text/css" href="css/article.css">
 <div>
 	<h1>Article #<?php echo $_GET['id']; ?></h1>
-	<div id="ojs-link"><a href="../index.php/digital_studies/editor/submissionReview/<?php echo $_GET['id']; ?>" target="_blank">Open Article in OJS<span id="ojs-icon" class="glyphicon glyphicon-share-alt" aria-hidden="true"></span></a></div>
+	<div id="ojs-link"><a href="../index.php/digital_studies/<?php echo $_GET['r']; ?>/submission/<?php echo $_GET['id']; ?>" target="_blank">Open Article in OJS<span id="ojs-icon" class="glyphicon glyphicon-share-alt" aria-hidden="true"></span></a></div>
 	<?php $article = getArticleInfo($_GET['id']); ?>
 	<div id="submission-container">
 		<h3>Submission</h3>

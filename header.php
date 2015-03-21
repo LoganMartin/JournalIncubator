@@ -14,12 +14,11 @@
 		<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
 			<div class="container-fluid">
 				<div class="navbar-header">
-					<a class="navbar-brand" href="#">Journal Incubator</a>
+					<a class="navbar-brand" href="home.php">Journal Incubator</a>
 				</div>
 				<div class="collapse navbar-collapse">
 					<ul class="nav navbar-nav">
 						<li><a href="home.php"><span class="glyphicon glyphicon-home" aria-hidden="true"></span></a></li>
-						<li><a href="#">Temp 2</a></li>
 					</ul>
 					<ul class="nav navbar-nav navbar-right">
 						<li id="account-dropdown" class="dropdown">
