@@ -5,8 +5,10 @@
 		$action = $_POST['action'];
 		switch($action) {
 			case 'getArticleInfo': 	getArticleInfo(); break;
-			case 'submitEvent': 	submitEvent(); break;
+			case 'submitEvent': 	submitEvent($_POST['userID'], $_POST['articleID'], $_POST['eventText']); break;
+			case 'assignEditor': 	assignEditor(); break;
 			case 'ajaxGetTimeline':  getArticleTimeline($_POST['articleID']); break;
+			case 'ajaxGetStatus':  echo getCurrentStatus($_POST['articleID']); break;
 			default: 			break;
 		}
 	}
@@ -14,6 +16,7 @@
 	function getArticleInfo($articleID) {
 		global $connection;
 		$author = "";
+		$editors = "";
 		$title = "";
 		
 		//Get article's author information
@@ -39,10 +42,12 @@
 			die('Error:'.mysql_error());
 		}
 		
-		$editResults = mysql_fetch_array($editResult, MYSQL_ASSOC);
-		$editor = $editResults['first_name']." ";
-		$editor .= $editResults['middle_name']." ";
-		$editor .= $editResults['last_name'];
+		while($row = mysql_fetch_array($editResult, MYSQL_ASSOC)) {
+			$editors .= $row['first_name']." ";
+			$editors .= $row['last_name'].", ";
+		}
+		
+		$editors = rtrim($editors, ', '); //Removes comma at end of string.		
 		
 		//Get other article information
 		$select = "SELECT * FROM articles a
@@ -62,7 +67,7 @@
 		
 		$data['title'] = $title;
 		$data['authors'] = $author;
-		$data['editor'] = $editor;
+		$data['editor'] = $editors;
 		return $data;
 	}
 	
@@ -178,17 +183,18 @@
 		echo $table;
 	}
 	
-	//Called using ajax in artile.js. Needed to pass a POST variable as a function paramater to getArticleTimeline().
-	//There's probably a better way of doing this, but this is good enough for now.
-	function ajaxGetTimeline() {
-		echo getArticleTimeline($_POST['articleID']);
-	}
-	
-	function submitEvent() {
-		$event = "Editors Note: ".$_POST['eventText']; //Add Editors note: to the start of a user submitted event, as requested by PO.
+	/**
+	 * Submits an event to the event_log table in the ojs database.
+	 * May be a manual event update, done from our interface. In this case, we have a post variable edNote.
+	 * @param $userID the id of the user who is responsible for the event.
+	 * @param $articleID the id number of the article which the event is for.
+	 * @param $event a string containing the event details.
+	 */
+	function submitEvent($userID, $articleID, $event) {
+		if(isset($_POST['edNote'])) {
+			$event = "Editors Note: ".$event; //Add Editors note: to the start of a user submitted event, as requested by PO.
+		}
 		$event = mysql_real_escape_string($event); //Escape special characters for INSERTING.
-		$articleID = $_POST['articleID'];
-		$userID = $_POST['userID'];
 		$clientIP =  $_SERVER['REMOTE_ADDR'];
 		$datetime = date("Y-m-d H:i:s");
 		global $connection;
@@ -202,10 +208,10 @@
 		}
 
 		$alert = "<div class='alert alert-success alert-dismissible' role='alert'>
-					<button type='button' class='close' data-dismissed='alert' aria-label='Close'>
+					<button type='button' class='close' data-dismiss='alert' aria-label='Close'>
 						<span aria-hidden='true'>&times;</span></button>
 					<strong>Success!</strong> Your event message has been recorded.</div>";
-		echo $alert;
+		if(isset($_POST['edNote'])) {echo $alert;}
 	}
 	
 	
@@ -228,8 +234,9 @@
 		
 		if(mysql_num_rows($result) == 0) {
 			$HTMLStatus .= "Awaiting Editor Assignment</h3>
-				<p>This article needs to have an editor assigned to it! Open the article in OJS(link above) to assign an editor.</p>";
-				
+				<p>This article needs to have an editor assigned to it! Open the article in OJS(link above) to assign an editor.</p>
+				<button type='button' class='btn btn-primary btn-lg' data-toggle='modal' data-target='#article-modal'>Select an Editor</button>";
+			$HTMLStatus .= generateModalByType("Editor");
 			return $HTMLStatus;
 		}
 		
@@ -253,7 +260,9 @@
 		
 		if(mysql_num_rows($result) == 0) {
 			$HTMLStatus .= "Waiting for Reviewer/Referee Assignment</h3>
-				<p>This article needs to be assigned reviewers! Open the article in OJS(link above) to assign them.</p>";
+				<p>This article needs to be assigned reviewers! Open the article in OJS(link above) to assign them.</p>
+				<button type='button' class='btn btn-primary btn-lg' data-toggle='modal' data-target='#article-modal'>Select Reviewers</button>";
+			$HTMLStatus .= generateModalByType("Reviewer");
 			return $HTMLStatus;
 		}
 		
@@ -280,5 +289,98 @@
 		$HTMLStatus .= "Unknown</h3>";
 		return $HTMLStatus;
 	}
-
+	
+	/**
+	 * Generates a modal, that will dropdown and allow the user to perform certain tasks, such as assign editors
+	 * or reviewers to the article.
+	 * @param string $modalType A string that indicates what type of modal shall be generated
+	 * @return string $modal A string of HTML code for the modal.
+	 */
+	function generateModalByType($modalType) {
+		global $connection;	
+		$modalContent = "";	
+		switch($modalType) {
+			case "Editor":
+				$title = "Select an Editor to assign:";
+				
+				//Gets a list of all users who are editors
+				$select = "SELECT * FROM roles r INNER JOIN users u ON r.user_id=u.user_id 
+					WHERE r.role_id = 256";
+				if(!$result = mysql_query($select, $connection)) {
+					die('Error:'.mysql_error());
+				}
+				$oddRow = true; //Used to color every other row slightly differently, for visibility purposes
+				while($row = mysql_fetch_array($result, MYSQL_ASSOC)) {
+					$modalContent .= "<div class='modal-row";
+					if($oddRow) $modalContent .= " odd-row";
+					$name = $row['first_name']." ".$row['last_name'];
+					$name = mysql_real_escape_string($name);
+					$modalContent .= "'><div class='modal-col'><p>".$row['first_name']." ".$row['last_name']."</p></div>
+										<div class='modal-col'>
+											<button id='assign".$row['user_id']."' class='btn btn-success assign-btn'";
+												$modalContent .= "onclick=\"assignEditor(".$row['user_id'].", '$name')\">
+												Assign
+											</button>
+										</div>
+									  </div>";
+					if($oddRow) $oddRow = false;
+					else $oddRow = true;
+				}
+				
+				break;
+			case "Reviewer":
+				$title = "Select a Reviewer to assign:";
+				$modalContent = "testing Reviewers";
+				break;
+			default:
+				break;
+		}
+		$modal = "<div class='modal fade' id='article-modal' tabindex='-1' role='dialog' aria-labelledby='article-modal-label' aria-hidden='true'>
+					<div class='modal-dialog'>
+						<div class='modal-content'>
+							<div class='modal-header'>
+								<button type='button' class='close' data-dismiss='modal' aria-label='Close'>
+									<span aria-hidden='true'>&times;</span></button>
+								<h4 class='modal-title' id='article-modal-label'>$title</h4>
+							</div>
+							<div class='modal-body'>$modalContent</div>
+							<div class='modal-footer'>
+								<button type='button' class='btn btn-primary' data-dismiss='modal'>Close</button>
+							</div>
+						</div>
+					</div>
+				  </div>";
+		return $modal;
+	}
+	
+	/**
+	 * Takes a user id, and article id, and creates an edit_assignment in the database using those values.
+	 * Get's it's "paramaters" from an ajax call.
+	 * @return string a message indicating either success or failure
+	 */
+	function assignEditor() {
+		$userID = $_POST['userID'];
+		$editorID = $_POST['editorID'];
+		$articleID = $_POST['articleID'];
+		$userName = $_POST['userName'];		
+		$datetime = date("Y-m-d H:i:s");
+		global $connection;
+		
+		$insert = "INSERT INTO edit_assignments (article_id, editor_id, date_notified)
+					VALUES ($articleID, $editorID, '$datetime')";
+		
+		if(!mysql_query($insert, $connection)) {
+			die('Error:'.mysql_error());
+		}
+		
+		//Submit a new event log, indicating the new editor assignment.
+		$eventLog = "$userName has been assigned as an editor to submission $articleID.";
+		submitEvent($userID, $articleID, $eventLog);
+		
+		$alert = "<div class='alert alert-success alert-dismissible' role='alert'>
+					<button type='button' class='close' data-dismiss='alert' aria-label='Close'>
+						<span aria-hidden='true'>&times;</span></button>
+					<strong>Success!</strong> Editors have been assigned to the article</div>";
+		echo $alert;
+	}
 ?>

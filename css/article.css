@@ -111,3 +111,45 @@ table.tablesorter thead tr .headerSortDown {
 #ojs-icon {
 	margin-left: 5px;
 }
+
+.modal-body {
+	max-height: 600px;
+	overflow: scroll;
+	overflow-x: hidden;
+}
+
+.modal-row
+{
+    display: table;
+    min-height: 75px;
+    width: 100%;
+    table-layout: fixed;
+}
+
+.odd-row {
+	background-color: #f9f9f9;
+}
+.modal-col
+{
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.modal-col p {
+	position: relative;
+	top: 5px;
+}
+
+.modal-col button {
+	float: right;
+	margin-right: 5px;
+}
+
+/*Fixes modals removing scrollbar on page, thus shifting all the page content to the right by about 15px.*/
+.modal{
+	overflow-y: auto;
+}
+.modal-open{
+	overflow:auto;
+	overflow-x:hidden;
+}

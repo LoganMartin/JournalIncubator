@@ -19,7 +19,7 @@
 	<div id="submission-container">
 		<h3>Submission</h3>
 		<div class="sub-field">
-			<p>Authors:</p>
+			<p>Author(s):</p>
 			<p><?php echo $article['authors']; ?></p>
 		</div>
 		<div class="sub-field">
@@ -27,10 +27,11 @@
 			<p><?php echo $article['title']; ?></p>
 		</div>
 		<div class="sub-field">
-			<p>Editor:</p>
-			<p><?php echo $article['editor'];?></p>
+			<p>Editor(s):</p>
+			<p id="editor-p"><?php echo $article['editor'];?></p>
 		</div>
 	</div>
+	<div id="article-alerts"></div>
 	<div id="status-container">
 		<?php echo getCurrentStatus($_GET['id']); ?>
 	</div>
