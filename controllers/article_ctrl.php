@@ -6,7 +6,7 @@
 		switch($action) {
 			case 'getArticleInfo': 	getArticleInfo(); break;
 			case 'submitEvent': 	submitEvent(); break;
-			case 'ajaxGetTimeline':  ajaxGetTimeline(); break;
+			case 'ajaxGetTimeline':  getArticleTimeline($_POST['articleID']); break;
 			default: 			break;
 		}
 	}
@@ -84,41 +84,67 @@
 							<div class='sub-field'>
 							<p>Reviewer:</p>";
 		
-				$reviewer .= "<p>".$row['first_name'];
-				$reviewer .= $row['last_name']."</p></br>";
+				$reviewer .= "<p>".$row['first_name']." ";
+				$reviewer .= $row['last_name']."</p></div>";
 			
-			if($row['date_notified']!=NULL){$reviewer .= "<p>Request: ".$row['date_notified']."</p></br>";}
-			//Original page has button to send email here
-			if($row['date_confirmed']!=NULL){$reviewer .= "<p>Underway: ".$row['date_confirmed']."</p></br>";}
-			if($row['date_due']!=NULL){$reviewer .= "<p>Due: ".date("D, M d, Y",strtotime($row['date_due']))."</p><span class='glyphicon glyphicon-calendar' aria-hidden='true'></span></br>";}
-			if($row['date_acknowledged']!=NULL){$reviewer .= "<p>Acknowledge: ".$row['date_acknowledged']."</p></br>";}
+			if($row['date_notified']!=NULL){
+				$temp = date("M d, Y g:ia",strtotime($row['date_notified']));
+			}
+			else {
+				$temp = "-";
+			}
 			
-			if($row['recommendation']!=NULL){$reviewer .= "<p>Recommendation: ".$row['recommendation']."</p></br>";}
+			$reviewer .= "<div class='sub-field'><p>Request:</p><p>".$temp."</p></div>";
+						
+			if($row['date_confirmed']!=NULL){
+				$temp = date("M d, Y g:ia",strtotime($row['date_confirmed']));
+			}
+			else {
+				$temp = "-";
+			}
+			$reviewer .= "<div class='sub-field'><p>Underway:</p><p>".$temp."</p></div>";
+			
+			if($row['date_due']!=NULL){
+				$temp = date("D, M d, Y",strtotime($row['date_due']));
+			}
+			else {
+				$temp = "-";
+			}
+			$reviewer .= "<div class='sub-field'><p>Due By:</p><p>".$temp."<span class='glyphicon glyphicon-calendar' aria-hidden='true'></span></p></div>";
+			
+			if($row['recommendation']!=NULL){
+				switch($row['recommendation']) {
+					case 1: 
+						$recommendation = "Accept Submission";
+						break;	
+					case 2:
+						$recommendation = "Revisions Required"; 
+						break;
+					case 3: 
+						$recommendation = "Resubmit for Review";
+						break;
+					case 4: 
+						$recommendation = "Resubmit Elsewhere";
+						break;
+					case 5: 
+						$recommendation = "Decline Submission";
+						break;
+					case 6: 
+						$recommendation = "See Comments";
+						break;
+					default:
+						break;
+				}
+			}
+			else {
+				$recommendation = "-";
+			}
+			$reviewer .= "<div class='sub-field'><p>Recommendation:</p><p>".$recommendation."</p></div>";
 			//Need to find corrosponding data for these instead of just values
-			
-			
-			$comments= getComments($articleID, $row['user_id']);
-			if($comments!=NULL){$reviewer .= "<p>Review: ". $comments."</p></br>";}
-				$reviewer .= "</div>";
-				//need buttons asking whether or not reviewer will accept, 
-				//if accepted, 'underway' changes to current date/time
-				
-				//Need 'Recommendation'
-				//Need 'review'
-				//Need 'uploaded files'
-				//Need 'reviewer rating'
 				$reviewer_number += 1;
 			}
 		}
 		return $reviewer;
-	}
-	
-	//function to grab the comments for a specific review from a specific user
-	function getComments($articleID, $userID){
-		global $connection;
-		
-		//run query
-		return 5; //temp	
 	}
 	
 	function getArticleTimeline($articleID) {
@@ -142,14 +168,14 @@
 						<tbody>";
 		
 		while($row = mysql_fetch_array($result, MYSQL_ASSOC)) {
-			$table .= '<tr><td>'.$row['date_logged'].'</td>';
+			$table .= '<tr><td>'.date("M d, Y H:i",strtotime($row['date_logged'])).'</td>';
 			$table .= '<td>'.$row['first_name'].' '.$row['last_name'].'</td>';
 			$table .= '<td>'.htmlspecialchars($row['message']).'</td></tr>';
 		}
 						
 		$table .= "</tbody></table>";
 		
-		return $table;
+		echo $table;
 	}
 	
 	//Called using ajax in artile.js. Needed to pass a POST variable as a function paramater to getArticleTimeline().
@@ -164,7 +190,7 @@
 		$articleID = $_POST['articleID'];
 		$userID = $_POST['userID'];
 		$clientIP =  $_SERVER['REMOTE_ADDR'];
-		$datetime = date("Y-m-d h:i:s");
+		$datetime = date("Y-m-d H:i:s");
 		global $connection;
 		
 		
@@ -180,6 +206,79 @@
 						<span aria-hidden='true'>&times;</span></button>
 					<strong>Success!</strong> Your event message has been recorded.</div>";
 		echo $alert;
+	}
+	
+	
+	/**
+	 * This function determines what part of the submission process an article is at in the workflow, and generates the relevant information to display.
+	 * Since OJS's database is so poorly put together, we're unable to simply check the status of an article in the database,
+	 * we have to run a series of queries in order to figure out what steps it has and hasn't gone through yet.
+	 * @param $articleID The id of the article which we are getting the status for.
+	 * @return string a string of html code that is displayed in the "current status" of an article
+	 */
+	function getCurrentStatus($articleID) {
+		global $connection;
+		$HTMLStatus = "<h3 id='status-header'><b>Current Status: </b>";
+		
+		//First let's check if the article has an editor assigned.
+		$select = "SELECT * FROM edit_assignments WHERE article_id = $articleID";
+		if(!$result = mysql_query($select, $connection)) {
+			die('Error:'.mysql_error());
+		}
+		
+		if(mysql_num_rows($result) == 0) {
+			$HTMLStatus .= "Awaiting Editor Assignment</h3>
+				<p>This article needs to have an editor assigned to it! Open the article in OJS(link above) to assign an editor.</p>";
+				
+			return $HTMLStatus;
+		}
+		
+		//Now, let's see if the editor has accepted the submission, and pushed it to the editing phase.
+		$select = "SELECT * FROM edit_decisions WHERE article_id = $articleID AND decision = 1";
+		if(!$result = mysql_query($select, $connection)) {
+			die('Error:'.mysql_error());
+		}
+		
+		if(mysql_num_rows($result) != 0) {
+			$HTMLStatus .= "In Editing</h3>
+				<p>The article has passed the review process, and is now in editing.</p>";
+			return $HTMLStatus;
+		}
+		
+		//Next, let's check if there are any reviewers assigned to the article.
+		$select = "SELECT * FROM review_assignments WHERE submission_id = $articleID";
+		if(!$result = mysql_query($select, $connection)) {
+			die('Error:'.mysql_error());
+		}
+		
+		if(mysql_num_rows($result) == 0) {
+			$HTMLStatus .= "Waiting for Reviewer/Referee Assignment</h3>
+				<p>This article needs to be assigned reviewers! Open the article in OJS(link above) to assign them.</p>";
+			return $HTMLStatus;
+		}
+		
+		//Now, let's check if there are any reviewers who haven't made their decision yet..
+		$select = "SELECT * FROM review_assignments WHERE submission_id = $articleID AND recommendation IS NOT NULL";
+		if(!$result = mysql_query($select, $connection)) {
+			die('Error:'.mysql_error());
+		}
+		
+		if(mysql_num_rows($result) == 0) {
+			$HTMLStatus .= "Waiting for Reviewer Decisions</h3>
+				<p>We're still waiting for some reviewers to make a decision.</p>";
+			$HTMLStatus .= getReviewerInfo($articleID);
+			return $HTMLStatus;
+		}
+		else {
+			$HTMLStatus .= "Awaiting Editor Decision</h3>
+				<p>The reviewers have all submitted their feedback, now we need an editors decision.</p>";
+			$HTMLStatus .= getReviewerInfo($articleID);
+			return $HTMLStatus;
+		}
+		
+		
+		$HTMLStatus .= "Unknown</h3>";
+		return $HTMLStatus;
 	}
 
 ?>

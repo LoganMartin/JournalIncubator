@@ -31,12 +31,9 @@
 			<p><?php echo $article['editor'];?></p>
 		</div>
 	</div>
-	
-	
-	<div id="reviewer-container">
-		<?php echo getReviewerInfo($_GET['id']); ?>
+	<div id="status-container">
+		<?php echo getCurrentStatus($_GET['id']); ?>
 	</div>
-	
 	<div id="events-container sub-field">
 		<div id="timeline-container" class="well">
 			<h3 id="timeline-header">Review Timeline</h3>

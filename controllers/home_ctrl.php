@@ -43,40 +43,6 @@
 		echo $tableData;
 	}
 
-	function getEditorJournals() {
-		global $connection;
-		$userID = $_SESSION['ojs_userID'];
-		
-		$select = "SELECT * FROM edit_assignments e 
-						INNER JOIN articles a ON e.article_id=a.article_id
-						INNER JOIN edit_decisions d ON a.article_id=d.article_id
-						WHERE e.editor_id=".$_SESSION['ojs_userID']."
-						AND d.decision <> 1";
-		if(!$result = mysql_query($select, $connection)) {
-			die('Error:'.mysql_error());
-		}
-		
-		$table = "<table id='review-table' class='table tablesorter table-striped table-hover'>
-						<thead>
-							<tr>
-								<th width='10%'>ID</th>
-								<th width='30%'>User</th>
-								<th width='60%'>Submitted</th>
-							</tr>
-						</thead>
-						<tbody>";
-		
-		while($row = mysql_fetch_array($result, MYSQL_ASSOC)) {
-			$table .= "<tr onclick='openArticle(".$row['article_id'].")'>";
-			$table .='<td>'.$row['article_id'].'</td>';
-			$table .= '<td>'.$row['user_id'].'</td>';
-			$table .= '<td>'.$row['date_submitted'].'</td></tr>';
-		}
-						
-		$table .= "</tbody></table>";
-		return $table;
-	}
-
 	//I did this super lazy copy paste job, should probably redo in a better way if we have time.
 	function getEditNum() {
 		global $connection;
@@ -210,7 +176,7 @@
 				$tabHTML .= "<li role='presentation' class='active'><a href='#unassignedTab".$count."' aria-controls='unassignedTab$count' role='tab' data-toggle='tab'>Active <span id='author-active-badge' class='badge'>".mysql_num_rows($activeData)."</span></a></li>";
 				$tabHTML .= "<li role='presentation'><a href='#reviewTab".$count."' aria-controls='reviewTab$count' role='tab' data-toggle='tab'>Archive <span id='author-archive-badge' class='badge'>".mysql_num_rows($archiveData)."</span></a></li>";
 				$contentHTML .= "<div role='tabpanel' class='tab-pane nested-tab-pane active' id='unassignedTab$count'>".generateArticleTable($activeData, "author")."</div>";
-				$contentHTML .= "<div role='tabpanel' class='tab-pane nested-tab-pane' id='reviewTab$count'>".generateArticleTable($archiveData, "author")."/div>";
+				$contentHTML .= "<div role='tabpanel' class='tab-pane nested-tab-pane' id='reviewTab$count'>".generateArticleTable($archiveData, "author")."</div>";
 				break;
 			default:
 				break;
@@ -446,14 +412,16 @@
 				
 			case"reviewer-active":
 				$select = "SELECT	Distinct a.article_id as ID, u.last_name as User, 
-					CONCAT(LPAD(MONTH(a.date_submitted),2,'0'),'-',DAYOFMONTH(a.date_submitted),'-',YEAR(a.date_submitted)) as SUBMITTED,
-					COALESCE(atl.setting_value, atpl.setting_value) AS submission_title,
+					CONCAT(LPAD(MONTH(a.date_submitted),2,'0'),'-',DAYOFMONTH(a.date_submitted),'-',YEAR(a.date_submitted)) as SUBMITTED,aap.last_name as Author,
+					COALESCE(atl.setting_value, atpl.setting_value) AS Title,
 					COALESCE(stl.setting_value, stpl.setting_value) AS section_title
 					FROM	articles a
 					LEFT JOIN review_assignments r ON (a.article_id = r.submission_id)
 					LEFT JOIN article_settings atpl ON (atpl.article_id = a.article_id AND atpl.setting_name = 'cleanTitle' AND atpl.locale = a.locale)
 					LEFT JOIN article_settings atl ON (atl.article_id = a.article_id AND atl.setting_name = 'cleanTitle' AND atl.locale = a.locale)
 					LEFT JOIN sections s ON (s.section_id = a.section_id)
+					LEFT JOIN authors aa ON (aa.submission_id = a.article_id)
+					LEFT JOIN authors aap ON (aap.submission_id = a.article_id AND aap.primary_contact = 1)
 					LEFT JOIN users u ON (r.reviewer_id = u.user_id)
 					LEFT JOIN review_rounds r2 ON (r.submission_id = r2.submission_id AND r.round = r2.round)
 					LEFT JOIN section_settings stpl ON (s.section_id = stpl.section_id AND stpl.setting_name = 'title' AND stpl.locale = a.locale)
